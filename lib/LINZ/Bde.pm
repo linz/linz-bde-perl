@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# linz_bde_loader -  LINZ BDE loader for PostgreSQL
+# LINZ Bde Perl package
 #
 # Copyright 2011 Crown copyright (c)
 # Land Information New Zealand and the New Zealand Government.

@@ -1,0 +1,4 @@
+# $id$
+# Todo need to update this from git describe
+our $VERSION = '1.0.0';
+
