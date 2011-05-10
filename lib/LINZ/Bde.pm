@@ -511,7 +511,7 @@ sub _files
    {
       my $files = {};
       my $p = $self->{path};
-      opendir(my $dh, $p);
+      opendir(my $dh, $p) || die "Can't open dataset directory $p: $!\n";;
       foreach my $d ( grep { /\.crs(?:\.gz)?$/i && -f "$p/$_" } readdir($dh) )
       {
          my $fn = lc($d);
@@ -548,7 +548,7 @@ sub open
        my $archive = $self->{archive};
        my @archive_files = ();
 
-       opendir(my $dh, $archive);
+       opendir(my $dh, $archive) || die "Can't open archive directory $archive: $!\n";
        foreach my $af (readdir($dh))
        {
            my @parts = split(/\./,$af);
@@ -620,7 +620,7 @@ sub datasets
    if( ! $self->{datasets} )
    {
       my $p = $self->{path};
-      opendir(my $dh, $p);
+      opendir(my $dh, $p) || die "Can't open datasets directory $p: $!\n";
       my @dirs = sort grep { /^\d{14}$/ && -d "$p/$_" } readdir($dh);
       closedir($dh);
       my @datasets = 
