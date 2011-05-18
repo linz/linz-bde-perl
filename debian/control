@@ -10,7 +10,7 @@ Vcs-Svn: git://github.com/linz/linz_bde_perl.git
 Vcs-Browser: https://github.com/linz/linz_bde_perl
 
 Package: liblinz-bde-perl
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends},
  libfile-which-perl
 Recommends:
