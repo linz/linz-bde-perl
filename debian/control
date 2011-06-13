@@ -1,7 +1,7 @@
 Source: liblinz-bde-perl
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 8)
+Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl (>= 5.8),
  libmodule-build-perl
 Maintainer: Jeremy Palmer (LINZ) <jpalmer@linz.govt.nz>
