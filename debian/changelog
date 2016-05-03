@@ -1,5 +1,5 @@
-liblinz-bde-perl (1.0.0-1) UNRELEASED; urgency=low
+liblinz-bde-perl (1.0.1-1linz~trusty1) trusty; urgency=low
 
-  * Initial release.
+  * Packaging for LINZ's Software Repository
 
- -- Jeremy Palmer <jpalmer@linz.govt.nz>  Fri, 6 May 2011 11:58:00 +1200
+ -- Ivan Mincik <imincik@linz.govt.nz>  Wed, 04 May 2016 07:26:28 +1200
