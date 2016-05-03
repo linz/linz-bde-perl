@@ -4,9 +4,10 @@ Priority: optional
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl (>= 5.8),
  libmodule-build-perl
+Standards-Version: 3.9.5
 Maintainer: Jeremy Palmer (LINZ) <jpalmer@linz.govt.nz>
 Homepage: http://www.linz.govt.nz
-Vcs-Svn: git://github.com/linz/linz_bde_perl.git
+Vcs-Git: git://github.com/linz/linz_bde_perl.git
 Vcs-Browser: https://github.com/linz/linz_bde_perl
 
 Package: liblinz-bde-perl
@@ -14,7 +15,7 @@ Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends},
  libfile-which-perl
 Recommends:
-Description: The Bde module is used to read bulk-data extract files generated 
+Description: The Bde module is used to read bulk-data extract files generated
  by Landonline. These are pipe delimited files of data.  The data in each file
  is preceded by header text defining the nature of the extract and the table
  and fields in the data.  The module allows for reading the files in text or
