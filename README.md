@@ -13,9 +13,34 @@ Each folder contains sub folders for each update, which are named according to
 the time of the update as YYYYMMDDhhmmss.  Within each folder the files for
 each table are named xxx.crs.gz, where xxx is a code for the table.
 
+## Simple install
+
+```shell
+perl Build.PL
+./Build install
+```
+
+## Advanced install options
+
+The build system is using perl Module::Build. A full list of the building
+options are available run:
+
+```shell
+./Build help
+```
+
+A more complex example involving specific install directories could something
+like:
+
+```shell
+perl Build.PL --prefix=/usr/local
+./Build install
+```
+
 ## Dependencies
 
-This package requires the bde_copy programme to be installed.
+This package requires the [linz_bde_copy](https://github.com/linz/linz_bde_copy)
+programme to be installed.
 
 
 ## License

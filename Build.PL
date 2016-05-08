@@ -32,7 +32,7 @@ my $build =  Module::Build->new(
     dist_version_from  => 'VERSION',
     sign               => 1,
     requires           => $requires,
-	create_makefile_pl => 'small',
+    create_makefile_pl => 'small',
 );
 
 $build->create_build_script;
