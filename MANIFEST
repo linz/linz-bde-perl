@@ -4,10 +4,10 @@ debian/compat
 debian/control
 debian/copyright
 debian/rules
+debian/source/format
 lib/LINZ/Bde.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
-README
+README.md
 VERSION
-META.yml
