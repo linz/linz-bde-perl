@@ -13,7 +13,8 @@ Vcs-Browser: https://github.com/linz/linz_bde_perl
 Package: liblinz-bde-perl
 Architecture: all
 Depends: ${misc:Depends}, ${perl:Depends},
- libfile-which-perl
+ libfile-which-perl,
+ linz-bde-copy (>= 1.1)
 Recommends:
 Description: The Bde module is used to read bulk-data extract files generated
  by Landonline. These are pipe delimited files of data.  The data in each file
