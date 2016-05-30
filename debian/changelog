@@ -1,3 +1,9 @@
+liblinz-bde-perl (1.0.1-2linz~trusty1) trusty; urgency=medium
+
+  * Adding missing dependencies
+
+ -- Ivan Mincik <imincik@linz.govt.nz>  Tue, 31 May 2016 08:27:48 +1200
+
 liblinz-bde-perl (1.0.1-1linz~trusty1) trusty; urgency=low
 
   * Packaging for LINZ's Software Repository
