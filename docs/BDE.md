@@ -12,7 +12,7 @@ document.
 
 BDE files were once available as a public format for accessing
 [Landonline](http://www.linz.govt.nz/land/landonline) data, but has been
-discontinued since around 2002.
+discontinued since 2015.
 
 As of 2017 The BDE file format is still used internally by LINZ for
 transfering data from the Landonline system to the new
