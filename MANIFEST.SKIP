@@ -5,6 +5,7 @@
 \B\.svn\b
 \B\.git\b
 \B\.cvsignore$
+\B\.travis.yml$
 
 # Avoid Makemaker generated and utility files.
 \bMakefile$
@@ -13,6 +14,8 @@
 \bpm_to_blib$
 \bblibdirs$
 ^MANIFEST\.SKIP$
+\bMETA.yml$
+\bMETA.json$
 
 # Avoid Module::Build generated and utility files.
 \bBuild$
