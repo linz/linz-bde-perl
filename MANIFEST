@@ -5,6 +5,9 @@ debian/control
 debian/copyright
 debian/rules
 debian/source/format
+docs/BDE.md
+docs/BDE_repository.md
+docs/landonline-bde-overview.pdf
 lib/LINZ/Bde.pm
 LICENSE
 Makefile.PL
