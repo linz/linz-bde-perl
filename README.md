@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/linz/linz_bde_perl.svg?branch=master)](https://travis-ci.org/linz/linz_bde_perl)
+
 # BDE Perl Package
 
 The BDE module can be used to read [LINZ bulk-data extract files](docs/BDE.md).
