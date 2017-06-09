@@ -20,7 +20,7 @@
 \bBuild$
 \bBuild.bat$
 \b_build
-\bLINZ-BDE-v.*
+\bLINZ-Bde-v.*
 
 # Avoid Devel::Cover generated files
 \bcover_db
