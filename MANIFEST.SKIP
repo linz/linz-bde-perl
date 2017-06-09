@@ -42,3 +42,5 @@
 \B\._
 # Avoid archives of this distribution
 \bLINZ-Bde-[\d\.\_]+
+^MYMETA\.yml$
+^MYMETA\.json$
