@@ -1,0 +1,7 @@
+#!/bin/sh
+
+PERL=perl
+
+cd `dirname $0`
+
+${PERL} Makefile.PL
