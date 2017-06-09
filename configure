@@ -4,4 +4,6 @@ PERL=perl
 
 cd `dirname $0`
 
+${PERL} Build.PL
+./Build distmeta
 ${PERL} Makefile.PL
