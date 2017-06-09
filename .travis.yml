@@ -11,4 +11,5 @@ perl:
 script:
   - perl Makefile.PL
   - make test
+  - make dist
   - make distcheck
