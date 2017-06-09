@@ -1,4 +1,5 @@
 Build.PL
+configure
 debian/changelog
 debian/compat
 debian/control
