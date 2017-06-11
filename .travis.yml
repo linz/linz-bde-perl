@@ -8,6 +8,10 @@ perl:
   - "5.14"
   - "5.12"
 
+before_install:
+  # These are needed to test debian package build
+  - sudo apt-get install debhelper
+
 script:
   - perl Makefile.PL
   - make test
