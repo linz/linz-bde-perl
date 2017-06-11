@@ -13,3 +13,5 @@ script:
   - make test
   - make dist
   - make distcheck
+  # Test debian package building
+  - dpkg-buildpackage -b -us -uc
