@@ -7,3 +7,8 @@ Makefile
 _build/
 blib/
 *.tar.gz
+debian/debhelper-build-stamp
+debian/files
+debian/liblinz-bde-perl.debhelper.log
+debian/liblinz-bde-perl.substvars
+debian/liblinz-bde-perl/
