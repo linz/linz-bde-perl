@@ -19,4 +19,4 @@ script:
   - make dist
   - make distcheck
   # Test debian package building
-  - dpkg-buildpackage -b -us -uc
+  - git clean -dxf && dpkg-buildpackage -b -us -uc
