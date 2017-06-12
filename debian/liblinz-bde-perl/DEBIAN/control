@@ -1,0 +1,15 @@
+Package: liblinz-bde-perl
+Version: 1.0.2-1linz~trusty1
+Architecture: all
+Maintainer: Jeremy Palmer (LINZ) <jpalmer@linz.govt.nz>
+Installed-Size: 117
+Depends: libfile-which-perl, linz-bde-copy (>= 1.1)
+Section: perl
+Priority: optional
+Homepage: http://www.linz.govt.nz
+Description: The Bde module is used to read bulk-data extract files generated
+ by Landonline. These are pipe delimited files of data.  The data in each file
+ is preceded by header text defining the nature of the extract and the table
+ and fields in the data.  The module allows for reading the files in text or
+ compressed mode. It also modifies geometry properties, adding an SRID to the
+ beginning and optionally offsetting the longitude.

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+PERL=perl
+
+cd `dirname $0`
+
+OPTS=
+
+while test -n "$1"; do
+  arg="$1"
+  shift
+  #echo "ARG is ${arg}"
+  #--------------------------------
+  # What dh-auto-config passes:
+  # --build=x86_64-linux-gnu --prefix=/usr --includedir=${prefix}/include --mandir=${prefix}/share/man --infodir=${prefix}/share/info --sysconfdir=/etc --localstatedir=/var --libexecdir=${prefix}/lib/liblinz-bde-perl --disable-maintainer-mode --disable-dependency-tracking
+  # What Makefile.PL understands:
+  # INSTALLMAN3DIR INSTALLPRIVLIB INC INSTALLSITESCRIPT UNINST INSTALLMAN1DIR INSTALL_BASE INSTALLARCHLIB INSTALLDIRS POLLUTE INSTALLVENDORARCH INSTALLBIN TEST_VERBOSE INSTALLVENDORSCRIPT INSTALLSITEBIN VERBINST INSTALLSITEMAN3DIR INSTALLSITEMAN1DIR INSTALLVENDORBIN INSTALLSCRIPT INSTALLVENDORLIB INSTALLSITEARCH INSTALLVENDORMAN3DIR INSTALLSITELIB DESTDIR INSTALLVENDORMAN1DIR PREFIX
+  #--------------------------------
+  if expr "${arg}" : "--prefix=" > /dev/null; then
+    val=`echo ${arg} | cut -d= -f2-`
+    OPTS="${OPTS} PREFIX=$val"
+  else
+    echo "WARNING: unsupported switch ${arg}" >&2
+  fi
+done
+
+echo "OPTS are ${OPTS}"
+
+${PERL} Build.PL ${OPTS}
+./Build distmeta
+${PERL} Makefile.PL ${OPTS}
