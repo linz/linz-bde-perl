@@ -14,5 +14,6 @@ script:
   #- make dist
   #- make distcheck
   - dpkg-buildpackage --version
+  - dpkg -l debhelper
   # Test debian package building
   - git clean -dxf && dpkg-buildpackage -b -us -uc
