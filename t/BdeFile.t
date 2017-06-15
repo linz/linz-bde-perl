@@ -102,6 +102,18 @@ $bde->next; $data = $bde->data;
 is_deeply ( scalar $data, [ '80401150', '4457326' ], 'third record' );
 is ( $bde->next, 0, "->next returns 0 at end of file" );
 
-# TODO: check copy (could mock bde_copy comand...) ?
+# Mock a bde_copy command
+my $fn = $tmpdir."/bde_copy";
+open(my $fh, ">", $fn) or die "Can not create $fn";
+print $fh "#!/bin/sh\necho \$\@ > $tmpdir/bde_copy_out\n";
+close ($fh);
+chmod 0755, $fn;
+$ENV{'PATH'} = $tmpdir . ':' . $ENV{'PATH'};
 
-done_testing(30);
+$bde->copy( 'out' );
+my $cmdline = `cat $tmpdir/bde_copy_out`;
+chop($cmdline);
+is ( $cmdline, "-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz out out.log",
+     'invoked bde_copy correctly' );
+
+done_testing(31);
