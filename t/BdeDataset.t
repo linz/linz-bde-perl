@@ -31,11 +31,11 @@ throws_ok {
   $dset = new LINZ::BdeDataset($datadir, 8);
 } qr/Invalid LINZ::BdeDataset level/, 'want a level of 0 or 5';
 
-ok ( $dset = new LINZ::BdeDataset($datadir, 0), 'can use $datadir as level 0 dataset' );
+ok ( $dset = new LINZ::BdeDataset($datadir, 0), "can use $datadir as level 0 dataset" );
 is( $dset->level, 0, 'trusts level to be the passed one (0)');
 is_deeply(scalar $dset->files, ['pab1'], 'finds pab1 file in dataset (0)');
 
-ok ( $dset = new LINZ::BdeDataset($datadir, 5), 'can use $datadir as level 5 dataset' );
+ok ( $dset = new LINZ::BdeDataset($datadir, 5), "can use $datadir as level 5 dataset" );
 is( $dset->level, 5, 'trusts level to be the passed one (5)');
 is_deeply(scalar $dset->files, ['pab1'], 'finds pab1 file in dataset (5)');
 
