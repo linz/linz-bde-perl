@@ -14,3 +14,4 @@ debian/files
 debian/liblinz-bde-perl.debhelper.log
 debian/liblinz-bde-perl.substvars
 debian/liblinz-bde-perl/
+LINZ-Bde-v*
