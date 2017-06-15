@@ -13,7 +13,6 @@ use LINZ::Bde;
 my $dset;
 my $datadir = "t/data";
 my $tmpdir = tempdir( '/tmp/BdeDataset.t-data-XXXX', CLEANUP => 1 );
-my $level;
 
 throws_ok {
   $dset = new LINZ::BdeDataset;
