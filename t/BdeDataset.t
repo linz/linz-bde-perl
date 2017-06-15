@@ -16,7 +16,7 @@ my $tmpdir = tempdir( '/tmp/BdeDataset.t-data-XXXX', CLEANUP => 1 );
 my $level;
 
 throws_ok {
-  $dset = new LINZ::BdeDataset
+  $dset = new LINZ::BdeDataset;
 } qr/Invalid LINZ::BdeDataset path/, 'want a path';
 
 throws_ok {
@@ -24,11 +24,11 @@ throws_ok {
 } qr/Invalid LINZ::BdeDataset path/, 'want an existing path';
 
 throws_ok {
-  $dset = new LINZ::BdeDataset($datadir)
+  $dset = new LINZ::BdeDataset($datadir);
 } qr/Invalid LINZ::BdeDataset level/, 'want a level';
 
 throws_ok {
-  $dset = new LINZ::BdeDataset($datadir, 8)
+  $dset = new LINZ::BdeDataset($datadir, 8);
 } qr/Invalid LINZ::BdeDataset level/, 'want a level of 0 or 5';
 
 ok ( $dset = new LINZ::BdeDataset($datadir, 0), 'can use $datadir as level 0 dataset' );
