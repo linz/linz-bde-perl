@@ -1,8 +1,6 @@
 #!/usr/bin/perl
 ################################################################################
 #
-# $Id$
-#
 # LINZ Bde Perl package
 #
 # Copyright 2011 Crown copyright (c)
