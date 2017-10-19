@@ -332,67 +332,10 @@ sub _bdecopy
     return $bdecopy;
 }
 
-sub copy
+sub resultFromLog
 {
-    my($self,$outputfile,@options) = @_;
+    my ($self,$log) = @_;
 
-    my $exe = _bdecopy();
-    my $opts = ref($options[0]) ? $options[0] : {@options};
-    my @copyopts;
-    my $cfgtmp;
-    my $cfg = $opts->{config};
-    if( $cfg =~ /\n/)
-    {
-        use File::Temp;
-        my $htmp;
-        ($htmp,$cfgtmp) = File::Temp::tempfile();
-        print $htmp $cfg;
-        CORE::close($htmp);
-        $cfg = $cfgtmp;
-    }
-    push(@copyopts,'-c',$cfg) if $cfg;
-
-    my @addfiles;
-    push(@addfiles,$opts->{addfile}) if $opts->{addfile};
-    push(@addfiles,@{$self->{archive_files}}) 
-        if $self->{archive_files} && $opts->{use_archive};
-    my $addfile = join('+',@addfiles);
-    push(@copyopts,'-p',$addfile) if $addfile;
-
-    push(@copyopts,'-a') if $opts->{append};
-    push(@copyopts,'-z') if $opts->{compress};
-
-    my $flds = join(':',split(' ',$self->{override_flds}));
-    push(@copyopts,'-f',$flds) if $flds;
-
-
-    $flds = $opts->{output_fields};
-    if( $flds )
-    {
-        if( ! ref($flds) )
-        {
-            my @f = $flds =~ /\w+/g;
-            $flds = \@f;
-        }
-        $self->output_fields($flds);
-    }
-
-    if( $self->{output_fields} )
-    {
-        $flds = join(':',@{$self->{output_fields}});
-        push(@copyopts,'-o',$flds) if $flds;
-    }
-
-    my $log = $opts->{log_file} || $outputfile.".log";
-
-    system(
-        $exe,
-        @copyopts,
-        $self->{path},
-        $outputfile,
-        $log
-    );
-    unlink($cfgtmp) if $cfgtmp;
     my $nrec=0;
     my $nerrors=0;
     my @warnings=();
@@ -461,8 +404,7 @@ sub copy
         }
         CORE::close($logf);
     }
-    unlink($log) if $opts->{log_file} || ! $opts->{keep_log};
-    my $success = $status eq 'success' && -r $outputfile;
+    my $success = $status eq 'success';
     my $result = 
     {
         success => $success,
@@ -477,6 +419,104 @@ sub copy
     return $result;
 }
 
+sub _copy_opts
+{
+    my($self,$opts) = @_;
+    my @copyopts;
+    my $cfgtmp;
+    my $cfg = $opts->{config};
+    if( $cfg =~ /\n/)
+    {
+        use File::Temp;
+        my $htmp;
+        ($htmp,$cfgtmp) = File::Temp::tempfile();
+        print $htmp $cfg;
+        CORE::close($htmp);
+        $cfg = $cfgtmp;
+    }
+    push(@copyopts,'-c',$cfg) if $cfg;
+
+    my @addfiles;
+    push(@addfiles,$opts->{addfile}) if $opts->{addfile};
+    push(@addfiles,@{$self->{archive_files}}) 
+        if $self->{archive_files} && $opts->{use_archive};
+    my $addfile = join('+',@addfiles);
+    push(@copyopts,'-p',$addfile) if $addfile;
+
+    push(@copyopts,'-a') if $opts->{append};
+    push(@copyopts,'-z') if $opts->{compress};
+
+    my $flds = join(':',split(' ',$self->{override_flds}));
+    push(@copyopts,'-f',$flds) if $flds;
+
+    $flds = $opts->{output_fields};
+    if( $flds )
+    {
+        if( ! ref($flds) )
+        {
+            my @f = $flds =~ /\w+/g;
+            $flds = \@f;
+        }
+        $self->output_fields($flds);
+    }
+
+    if( $self->{output_fields} )
+    {
+        $flds = join(':',@{$self->{output_fields}});
+        push(@copyopts,'-o',$flds) if $flds;
+    }
+
+    return ($cfgtmp, @copyopts);
+}
+
+sub copy
+{
+    my($self,$outputfile,@options) = @_;
+    my $opts = ref($options[0]) ? $options[0] : {@options};
+
+    my $exe = _bdecopy();
+    my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
+
+    my $log = $opts->{log_file} || $outputfile.".log";
+
+    system(
+        $exe,
+        @copyopts,
+        $self->{path},
+        $outputfile,
+        $log
+    );
+    unlink($cfgtmp) if $cfgtmp;
+
+    my $result = $self->resultFromLog($log);
+    unlink($log) if $opts->{log_file} || ! $opts->{keep_log};
+    return $result;
+}
+
+sub pipe
+{
+    my($self,@options) = @_;
+    my $opts = ref($options[0]) ? $options[0] : {@options};
+
+    my $outputfile = '/dev/stdout';
+    die "Pipe is not supported on this system (lack of $outputfile named pipe)"
+        unless -p $outputfile;
+
+    my $exe = _bdecopy();
+    my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
+
+    my $log = $opts->{log_file};
+    if ( ! $log ) {
+      my $hlog;
+      ( $hlog, $log ) = File::Temp::tempfile();
+      close($hlog);
+    }
+
+    my $cmdline = $exe . ' ' . join(' ', @copyopts)
+       . ' ' . $self->{path} . ' ' . $outputfile . ' ' . $log;
+    open(my $fh, $cmdline . '|') || die "Cannot execute $cmdline: $!";
+    return $fh;
+}
 
 package LINZ::BdeDataset;
 
