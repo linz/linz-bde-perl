@@ -114,4 +114,13 @@ chop($cmdline);
 is ( $cmdline, "-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz out out.log",
      'invoked bde_copy correctly' );
 
-done_testing(31);
+unlink "$tmpdir/bde_copy_out";
+$fh = $bde->pipe({'log_file' => '/tmp/log'});
+while (<$fh>) { }; # make sure it executes
+close($fh);
+$cmdline = `cat $tmpdir/bde_copy_out`;
+chop($cmdline);
+is ( $cmdline, "-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz /dev/stdout /tmp/log",
+     'invoked bde_copy correctly for pipe' );
+
+done_testing(32);
