@@ -52,7 +52,7 @@ So then you can install it via:
 
 ## Dependencies
 
-This package requires the [linz_bde_copy](https://github.com/linz/linz_bde_copy)
+This package requires the [linz-bde-copy](https://github.com/linz/linz-bde-copy)
 programme to be installed.
 
 
