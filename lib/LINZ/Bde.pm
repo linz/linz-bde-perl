@@ -419,12 +419,9 @@ sub resultFromLog
     return $result;
 }
 
-sub copy
+sub _copy_opts
 {
-    my($self,$outputfile,@options) = @_;
-
-    my $exe = _bdecopy();
-    my $opts = ref($options[0]) ? $options[0] : {@options};
+    my($self,$opts) = @_;
     my @copyopts;
     my $cfgtmp;
     my $cfg = $opts->{config};
@@ -452,7 +449,6 @@ sub copy
     my $flds = join(':',split(' ',$self->{override_flds}));
     push(@copyopts,'-f',$flds) if $flds;
 
-
     $flds = $opts->{output_fields};
     if( $flds )
     {
@@ -469,6 +465,17 @@ sub copy
         $flds = join(':',@{$self->{output_fields}});
         push(@copyopts,'-o',$flds) if $flds;
     }
+
+    return ($cfgtmp, @copyopts);
+}
+
+sub copy
+{
+    my($self,$outputfile,@options) = @_;
+    my $opts = ref($options[0]) ? $options[0] : {@options};
+
+    my $exe = _bdecopy();
+    my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
 
     my $log = $opts->{log_file} || $outputfile.".log";
 
@@ -489,53 +496,10 @@ sub copy
 sub pipe
 {
     my($self,@options) = @_;
+    my $opts = ref($options[0]) ? $options[0] : {@options};
 
     my $exe = _bdecopy();
-    my $opts = ref($options[0]) ? $options[0] : {@options};
-    my @copyopts;
-    my $cfgtmp;
-    my $cfg = $opts->{config};
-    if( $cfg =~ /\n/)
-    {
-        use File::Temp;
-        my $htmp;
-        ($htmp,$cfgtmp) = File::Temp::tempfile();
-        print $htmp $cfg;
-        CORE::close($htmp);
-        $cfg = $cfgtmp;
-    }
-    push(@copyopts,'-c',$cfg) if $cfg;
-
-    my @addfiles;
-    push(@addfiles,$opts->{addfile}) if $opts->{addfile};
-    push(@addfiles,@{$self->{archive_files}}) 
-        if $self->{archive_files} && $opts->{use_archive};
-    my $addfile = join('+',@addfiles);
-    push(@copyopts,'-p',$addfile) if $addfile;
-
-    push(@copyopts,'-a') if $opts->{append};
-    push(@copyopts,'-z') if $opts->{compress};
-
-    my $flds = join(':',split(' ',$self->{override_flds}));
-    push(@copyopts,'-f',$flds) if $flds;
-
-
-    $flds = $opts->{output_fields};
-    if( $flds )
-    {
-        if( ! ref($flds) )
-        {
-            my @f = $flds =~ /\w+/g;
-            $flds = \@f;
-        }
-        $self->output_fields($flds);
-    }
-
-    if( $self->{output_fields} )
-    {
-        $flds = join(':',@{$self->{output_fields}});
-        push(@copyopts,'-o',$flds) if $flds;
-    }
+    my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
 
     my $log = $opts->{log_file};
     if ( ! $log ) {
