@@ -62,7 +62,7 @@ is ( $bde->start_time, '2016-06-01 17:12:25', 'reads start_time from file' );
 is ( $bde->end_time, '2016-06-01 17:12:25', 'reads end_time from file');
 
 TODO: {
-  local $TODO = "https://github.com/linz/linz_bde_perl/issues/19";
+  local $TODO = "https://github.com/linz/linz-bde-perl/issues/19";
   is_deeply ( [ $bde->archive_files ], [], 'checks archives from file');
 }
 
