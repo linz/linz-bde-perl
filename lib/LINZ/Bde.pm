@@ -511,7 +511,6 @@ sub pipe
     my $cmdline = $exe . ' ' . join(' ', @copyopts)
        . ' ' . $self->{path} . ' /dev/stdout' . ' ' . $log;
     open(my $fh, $cmdline . '|') || die "Cannot execute $cmdline: $!";
-    unlink($cfgtmp) if $cfgtmp;
     return $fh;
 }
 
