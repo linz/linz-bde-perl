@@ -498,6 +498,10 @@ sub pipe
     my($self,@options) = @_;
     my $opts = ref($options[0]) ? $options[0] : {@options};
 
+    my $outputfile = '/dev/stdout';
+    die "Pipe is not supported on this system (lack of $outputfile named pipe)"
+        unless -p $outputfile;
+
     my $exe = _bdecopy();
     my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
 
@@ -509,7 +513,7 @@ sub pipe
     }
 
     my $cmdline = $exe . ' ' . join(' ', @copyopts)
-       . ' ' . $self->{path} . ' /dev/stdout' . ' ' . $log;
+       . ' ' . $self->{path} . ' ' . $outputfile . ' ' . $log;
     open(my $fh, $cmdline . '|') || die "Cannot execute $cmdline: $!";
     return $fh;
 }
