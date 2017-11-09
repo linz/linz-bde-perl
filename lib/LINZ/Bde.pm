@@ -499,9 +499,11 @@ sub pipe
     my $opts = ref($options[0]) ? $options[0] : {@options};
 
     my $outputfile = '/dev/stdout';
-    if ( ! -p $outputfile )
+    # /dev/stdout needs to be writeable and a named pipe or character
+    # device for pipe to work w/out writing a temporary file
+    if ( not -w $outputfile or not ( -p $outputfile or -c $outputfile) )
     {
-        print STDERR "WARNING: /dev/stdout is not a pipe so "
+        print STDERR "WARNING: /dev/stdout is not usable so "
                    . "Bde::pipe will use a temporary file\n";
         my ($fh, $tmpfile) = File::Temp::tempfile();
         close($fh);
