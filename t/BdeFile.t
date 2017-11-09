@@ -103,7 +103,7 @@ is ( $bde->next, 0, "->next returns 0 at end of file" );
 # Mock a bde_copy command
 my $fn = $tmpdir."/bde_copy";
 open(my $fh, ">", $fn) or die "Can not create $fn";
-print $fh "#!/bin/sh\necho \$\@ > $tmpdir/bde_copy_out\necho 1\necho 2\necho 3\n";
+print $fh "#!/bin/sh\necho \$\@ > $tmpdir/bde_copy_out\n( echo 1\necho 2\necho 3\n ) > \$4";
 close ($fh);
 chmod 0755, $fn;
 $ENV{'PATH'} = $tmpdir . ':' . $ENV{'PATH'};
@@ -128,7 +128,7 @@ is ( $lines[2], 3 );
 close($fh);
 $cmdline = `cat $tmpdir/bde_copy_out`;
 chop($cmdline);
-is ( $cmdline, "-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz /dev/stdout /tmp/log",
+like ( $cmdline, qr|-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz [^ ]* /tmp/log|,
      'invoked bde_copy correctly for pipe' );
 unlink "$tmpdir/bde_copy_out";
 

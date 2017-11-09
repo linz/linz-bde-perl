@@ -514,9 +514,9 @@ sub pipe
         {
             print($msg);
         }
-        open(my $tabledatafh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
+        open($fh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
         unlink $tmpfile;
-        return $tabledatafh;
+        return $fh;
     }
 
 
