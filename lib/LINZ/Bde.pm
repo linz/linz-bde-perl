@@ -511,7 +511,7 @@ sub pipe
             die (@{$result->{errors}});
         }
         open(my $tabledatafh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
-        unlink $tmpfile if $tmpfile && ! $self->{keepfiles};
+        unlink $tmpfile;
         return $tabledatafh;
     }
 
