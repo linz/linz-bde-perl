@@ -501,6 +501,8 @@ sub pipe
     my $outputfile = '/dev/stdout';
     if ( ! -p $outputfile )
     {
+        print STDERR "WARNING: /dev/stdout is not a pipe so "
+                   . "Bde::pipe will use a temporary file\n";
         my ($fh, $tmpfile) = File::Temp::tempfile();
         close($fh);
         my $result = $self->copy($outputfile, @options);
