@@ -510,6 +510,10 @@ sub pipe
         {
             die (@{$result->{errors}});
         }
+        foreach my $msg (@{$result->{warnings}})
+        {
+            print($msg);
+        }
         open(my $tabledatafh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
         unlink $tmpfile;
         return $tabledatafh;
