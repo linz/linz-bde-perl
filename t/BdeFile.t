@@ -103,20 +103,32 @@ is ( $bde->next, 0, "->next returns 0 at end of file" );
 # Mock a bde_copy command
 my $fn = $tmpdir."/bde_copy";
 open(my $fh, ">", $fn) or die "Can not create $fn";
-print $fh "#!/bin/sh\necho \$\@ > $tmpdir/bde_copy_out\necho 1\necho 2\necho 3\n";
+print $fh "#!/bin/sh\necho \$\@ > $tmpdir/bde_copy_out\n( echo 1\necho 2\necho 3\necho \$\@ ) > \$4";
 close ($fh);
 chmod 0755, $fn;
 $ENV{'PATH'} = $tmpdir . ':' . $ENV{'PATH'};
 
-$bde->copy( 'out' );
+$fn = "/tmp/BdeFile-Test-$$";
+$bde->copy( $fn );
 my $cmdline = `cat $tmpdir/bde_copy_out`;
 chop($cmdline);
-is ( $cmdline, "-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz out out.log",
+like ( $cmdline, qr|-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz $fn $fn.log|,
      'invoked bde_copy correctly' );
 unlink "$tmpdir/bde_copy_out";
+open($fh, "<$fn") || die "Cannot open $fn\n";
+my @lines;
+while (<$fh>) {
+  chop;
+  push @lines, $_;
+};
+is ( $lines[0], 1 );
+is ( $lines[1], 2 );
+is ( $lines[2], 3 );
+unlink($fn);
 
 $fh = $bde->pipe({'log_file' => '/tmp/log'});
-my @lines;
+ok ( $fh );
+@lines = ();
 while (<$fh>) {
   chop;
   push @lines, $_;
@@ -127,8 +139,8 @@ is ( $lines[2], 3 );
 close($fh);
 $cmdline = `cat $tmpdir/bde_copy_out`;
 chop($cmdline);
-is ( $cmdline, "-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz /dev/stdout /tmp/log",
+like ( $cmdline, qr|-o audit_id:pri_id $tmpdir/pab1-comp.crs.gz [^ ]* /tmp/log|,
      'invoked bde_copy correctly for pipe' );
 unlink "$tmpdir/bde_copy_out";
 
-done_testing(35);
+done_testing(39);

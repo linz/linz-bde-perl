@@ -17,6 +17,8 @@ before_install:
 script:
   - ./configure
   - make test
+  - sudo mv /dev/stdout /dev/stdout.bak
+  - make test
   - make dist
   - make distcheck
   - make disttest

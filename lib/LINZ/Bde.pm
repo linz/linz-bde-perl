@@ -505,14 +505,18 @@ sub pipe
                    . "Bde::pipe will use a temporary file\n";
         my ($fh, $tmpfile) = File::Temp::tempfile();
         close($fh);
-        my $result = $self->copy($outputfile, @options);
+        my $result = $self->copy($tmpfile, @options);
         if ($result->{nerrors} > 0)
         {
             die (@{$result->{errors}});
         }
-        open(my $tabledatafh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
-        unlink $tmpfile if $tmpfile && ! $self->{keepfiles};
-        return $tabledatafh;
+        foreach my $msg (@{$result->{warnings}})
+        {
+            print($msg);
+        }
+        open($fh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
+        unlink $tmpfile;
+        return $fh;
     }
 
 
