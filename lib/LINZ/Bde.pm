@@ -499,8 +499,22 @@ sub pipe
     my $opts = ref($options[0]) ? $options[0] : {@options};
 
     my $outputfile = '/dev/stdout';
-    die "Pipe is not supported on this system (lack of $outputfile named pipe)"
-        unless -p $outputfile;
+    if ( ! -p $outputfile )
+    {
+        print STDERR "WARNING: /dev/stdout is not a pipe so "
+                   . "Bde::pipe will use a temporary file\n";
+        my ($fh, $tmpfile) = File::Temp::tempfile();
+        close($fh);
+        my $result = $self->copy($outputfile, @options);
+        if ($result->{nerrors} > 0)
+        {
+            die (@{$result->{errors}});
+        }
+        open(my $tabledatafh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
+        unlink $tmpfile if $tmpfile && ! $self->{keepfiles};
+        return $tabledatafh;
+    }
+
 
     my $exe = _bdecopy();
     my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
