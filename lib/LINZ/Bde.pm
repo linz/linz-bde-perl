@@ -505,7 +505,7 @@ sub pipe
                    . "Bde::pipe will use a temporary file\n";
         my ($fh, $tmpfile) = File::Temp::tempfile();
         close($fh);
-        my $result = $self->copy($outputfile, @options);
+        my $result = $self->copy($tmpfile, @options);
         if ($result->{nerrors} > 0)
         {
             die (@{$result->{errors}});
