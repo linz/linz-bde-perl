@@ -732,7 +732,7 @@ LINZ::Bde -- Reads and parses Landonline BDE files
   # LINZ::BdeFile functions
 
   LINZ::BdeFile::set_bde_path("c:/bde_data/level0/20100301230530");
-  LINZ::BdeFile::set_srid_lon_offset(4167,160.0);
+  LINZ::BdeFile::set_srid_longitude_offset(4167,160.0);
 
   $bdefile = LINZ::BdeFile->open("par1");
   $bdefile->copy( $outputfile );
@@ -822,7 +822,7 @@ The following class functions are provided:
 
 Sets a default directory in which to find BDE files. 
 
-=item LINZ::BdeFile::set_srid_lon_offset( srid, [lon_offset] )
+=item LINZ::BdeFile::set_srid_longitude_offset( srid, [lon_offset] )
 
 Sets the geometry SRID and the longitude offset applied to geometry fields.  These default to 4167 and 160.0.
 
