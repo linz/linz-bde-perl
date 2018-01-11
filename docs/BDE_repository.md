@@ -6,6 +6,9 @@ Each folder contains sub folders for each update, which are named according to
 the time of the update as YYYYMMDDhhmmss.  Within each folder the files for
 each table are named xxx.crs.gz, where xxx is a code for the table.
 
+The "time of the update" of a folder would match the oldest
+time written in the START header of any contained file.
+
 ## Archives
 
 The repository may also contain subfolders `level_0_archive` and
