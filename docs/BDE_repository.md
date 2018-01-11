@@ -9,6 +9,8 @@ each table are named xxx.crs.gz, where xxx is a code for the table.
 The "time of the update" of a folder would match the oldest
 time written in the START header of any contained file.
 
+All timestamps represent times in NZDT timezone.
+
 ## Archives
 
 The repository may also contain subfolders `level_0_archive` and
@@ -21,5 +23,5 @@ data), and for efficiency is not included in the extract.  These files are
 called xxx.yyy where yyy is an arbitrary continuation of the file name.
 If yyy ends ".gz" the file is assumed to be gzipped.  If it contains a
 string ".YYYYMMDDhhmmss." then it will be included with updates after
-that date.
+that timestamp.
 
