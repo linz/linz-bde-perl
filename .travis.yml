@@ -1,5 +1,4 @@
 dist: trusty
-language: perl
 perl:
   - "5.26"
   - "5.24"
@@ -12,7 +11,9 @@ perl:
 
 before_install:
   # These are needed to test debian package build
-  - sudo apt-get install debhelper fakeroot
+  - sudo apt-get install debhelper fakeroot cpanminus
+  # Install packages needed for testing
+  - sudo cpanm Test::Cmd Test::Exception File::Which
 
 script:
   - ./configure
