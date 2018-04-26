@@ -193,9 +193,18 @@ sub fields {
 
 sub archive_files {
   my($self,@files) = @_;
-  @files = @{$files[0]} if ref($files[0]);
-  @files = $self->fields if ! @files && ! $self->{archive_files};
-  $self->{archive_files} = \@files if @files;
+  if ( @files )
+  {
+    if ( ref($files[0]) )
+    {
+      @files = @{$files[0]};
+    }
+  }
+  else
+  {
+    @files = ();
+  }
+  $self->{archive_files} = \@files;
   my @sfiles = @{$self->{archive_files}};
   return wantarray ? @sfiles : \@sfiles;
   }

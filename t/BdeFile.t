@@ -61,10 +61,8 @@ is ( $bde->table, 'crs_parcel_bndry', 'reads table from file' );
 is ( $bde->start_time, '2016-06-01 17:12:25', 'reads start_time from file' );
 is ( $bde->end_time, '2016-06-01 17:12:25', 'reads end_time from file');
 
-TODO: {
-  local $TODO = "https://github.com/linz/linz-bde-perl/issues/19";
-  is_deeply ( [ $bde->archive_files ], [], 'checks archives from file');
-}
+# See https://github.com/linz/linz-bde-perl/issues/19
+is_deeply ( [ $bde->archive_files ], [], 'checks archives from file');
 
 # TODO: test archive_files when opening from BdeRepository/BdeDataset
 
