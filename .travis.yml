@@ -13,7 +13,7 @@ before_install:
   # These are needed to test debian package build
   - sudo apt-get install debhelper fakeroot cpanminus
   # Install packages needed for testing
-  - sudo cpanm Test::Cmd Test::Exception File::Which
+  - sudo cpanm Test::Cmd Test::Exception File::Which #Modules::Signature
 
 script:
   - ./configure
