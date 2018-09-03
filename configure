@@ -8,3 +8,9 @@ ${PERL} Build.PL
 ./Build manifest
 ./Build distmeta
 ${PERL} Makefile.PL
+
+# Append custom rules
+cat <<EOF >> Makefile
+deb:
+	dpkg-buildpackage -b -us -uc
+EOF
