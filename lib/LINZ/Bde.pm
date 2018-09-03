@@ -498,40 +498,56 @@ sub pipe
     my($self,@options) = @_;
     my $opts = ref($options[0]) ? $options[0] : {@options};
 
-    my $outputfile = '/dev/stdout';
-    # /dev/stdout needs to be writeable and a named pipe or character
-    # device for pipe to work w/out writing a temporary file
-    if ( not -w $outputfile or not ( -p $outputfile or -c $outputfile) )
-    {
-        print STDERR "WARNING: /dev/stdout is not usable so "
-                   . "Bde::pipe will use a temporary file\n";
-        if ( not -w $outputfile )
-        {
-          print STDERR "DETAIL: /dev/stdout is not writeable\n";
-        }
-        if ( not ( -p $outputfile or -c $outputfile ) )
-        {
-          print STDERR "DETAIL: /dev/stdout is not pipe or character device\n";
-        }
+    my $exe = _bdecopy();
+    my $outputfile;
 
-        my ($fh, $tmpfile) = File::Temp::tempfile();
-        close($fh);
-        my $result = $self->copy($tmpfile, @options);
-        if ($result->{nerrors} > 0)
-        {
-            die (@{$result->{errors}});
-        }
-        foreach my $msg (@{$result->{warnings}})
-        {
-            print($msg);
-        }
-        open($fh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
-        unlink $tmpfile;
-        return $fh;
+    # bde_copy 1.3.0 introduced support for '-' string to signify
+    # using stdout for output, and it also introduced the `-V` switch
+    # to print version, so we check for -V support to tell if we're
+    # good to go.
+    my $ver = `$exe -V 2>&1`;
+    if ( $? eq 0 ) {
+      # Supports output to stdout
+      chop($ver); $ver =~ s/bde_copy //; $ver =~ s/ [0-9a-f]+$//;
+      print STDERR "NOTICE: using built-in stdout support in bde_copy $ver\n";
+      $outputfile = '-';
+    }
+    else
+    {
+      $outputfile = '/dev/stdout';
+      # /dev/stdout needs to be writeable and a named pipe or character
+      # device for pipe to work w/out writing a temporary file
+      if ( not -w $outputfile or not ( -p $outputfile or -c $outputfile) )
+      {
+          print STDERR "WARNING: /dev/stdout is not usable so "
+                     . "Bde::pipe will use a temporary file\n";
+          if ( not -w $outputfile )
+          {
+            print STDERR "DETAIL: /dev/stdout is not writeable\n";
+          }
+          if ( not ( -p $outputfile or -c $outputfile ) )
+          {
+            print STDERR "DETAIL: /dev/stdout is not pipe or character device\n";
+          }
+          my ($fh, $tmpfile) = File::Temp::tempfile();
+          close($fh);
+          my $result = $self->copy($tmpfile, @options);
+          if ($result->{nerrors} > 0)
+          {
+              die (@{$result->{errors}});
+          }
+          foreach my $msg (@{$result->{warnings}})
+          {
+              print($msg);
+          }
+          open($fh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
+          unlink $tmpfile;
+          return $fh;
+      }
+      print STDERR "NOTICE: using /dev/stdout trick with bde_copy\n";
     }
 
 
-    my $exe = _bdecopy();
     my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
 
     my $log = $opts->{log_file};
