@@ -505,6 +505,15 @@ sub pipe
     {
         print STDERR "WARNING: /dev/stdout is not usable so "
                    . "Bde::pipe will use a temporary file\n";
+        if ( not -w $outputfile )
+        {
+          print STDERR "DETAIL: /dev/stdout is not writeable\n";
+        }
+        if ( not ( -p $outputfile or -c $outputfile ) )
+        {
+          print STDERR "DETAIL: /dev/stdout is not pipe or character device\n";
+        }
+
         my ($fh, $tmpfile) = File::Temp::tempfile();
         close($fh);
         my $result = $self->copy($tmpfile, @options);
