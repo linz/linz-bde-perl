@@ -488,17 +488,24 @@ sub copy
 
     my $log = $opts->{log_file} || $outputfile.".log";
 
-    system(
-        $exe,
+    my @commandline = ($exe,
         @copyopts,
         $self->{path},
         $outputfile,
-        $log
-    );
+        $log);
+    my $ret = system(@commandline);
     unlink($cfgtmp) if $cfgtmp;
 
     my $result = $self->resultFromLog($log);
     unlink($log) if $opts->{log_file} || ! $opts->{keep_log};
+
+    if ( $ret != 0 )
+    {
+      $result->{nerrors}++;
+      push($result->{errors},
+        join(' ', @commandline) .
+        ' exited with ' . $ret);
+    }
     return $result;
 }
 
