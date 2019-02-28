@@ -23,7 +23,7 @@ my $requires = {
     'File::Which'   => 0,
 };
 
-my $version = '1.0.0';
+my $version = '1.1.0';
 if ( `which git` && -d '.git' ) {
   $version = `git describe`;
   chop($version);
