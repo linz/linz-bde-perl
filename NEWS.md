@@ -1,3 +1,7 @@
+# 1.2.0dev (YYYY-MM-DD)
+## Added
+## Fixed
+
 # 1.1.0 (2019-02-28)
 ## Added
 - Bde::pipe method (#23)
