@@ -525,7 +525,6 @@ sub pipe
     if ( $? eq 0 ) {
       # Supports output to stdout
       chop($ver); $ver =~ s/bde_copy //; $ver =~ s/ [0-9a-f]+$//;
-      print STDERR "NOTICE: using built-in stdout support in bde_copy $ver\n";
       $outputfile = '-';
     }
     else
