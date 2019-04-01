@@ -1,3 +1,9 @@
+liblinz-bde-perl (1.1.0-1linz~trusty1) trusty; urgency=medium
+
+  * New upstream version
+
+ -- Ivan Mincik <ivan.mincik@gmail.com>  Mon, 01 Apr 2019 15:27:00 +0200
+
 liblinz-bde-perl (1.0.2-1linz~trusty1) trusty; urgency=medium
 
   * New upstream version
