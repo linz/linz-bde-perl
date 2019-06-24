@@ -1,4 +1,6 @@
 dist: bionic
+language: perl
+
 perl:
   - "5.26"
   - "5.24"
