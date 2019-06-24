@@ -502,7 +502,7 @@ sub copy
     if ( $ret != 0 )
     {
       $result->{nerrors}++;
-      push($result->{errors},
+      push( @{ $result->{errors} },
         join(' ', @commandline) .
         ' exited with ' . $ret);
     }
