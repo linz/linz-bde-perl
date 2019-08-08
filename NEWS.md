@@ -1,3 +1,7 @@
+# 1.1.1 (2019-MM-DD)
+## Fixed
+- Perl 5.26 support ("Experimental push on scalar now forbidden" error)
+
 # 1.1.0 (2019-02-28)
 ## Added
 - Bde::pipe method (#23)
