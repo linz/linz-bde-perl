@@ -1,3 +1,9 @@
+liblinz-bde-perl (1.1.1-1linz~bionic1) bionic; urgency=medium
+
+  * New upstream version
+
+ -- Sandro Santilli <strk@kbt.io>  Thu, 08 Aug 2019 12:02:32 +0200
+
 liblinz-bde-perl (1.1.0-1linz~trusty1) trusty; urgency=medium
 
   * New upstream version
