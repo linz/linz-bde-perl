@@ -1,4 +1,4 @@
-# 1.1.1 (2019-MM-DD)
+# 1.1.1 (2019-08-08)
 ## Fixed
 - Perl 5.26 support ("Experimental push on scalar now forbidden" error)
 
