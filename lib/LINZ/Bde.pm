@@ -438,7 +438,10 @@ sub _copy_opts
     {
         use File::Temp;
         my $htmp;
-        ($htmp,$cfgtmp) = File::Temp::tempfile();
+        ($htmp,$cfgtmp) = File::Temp::tempfile(
+                             '/tmp/bde-perl-copy-config-XXXX',
+                             UNLINK => 1
+                          );
         print $htmp $cfg;
         CORE::close($htmp);
         $cfg = $cfgtmp;
@@ -544,7 +547,10 @@ sub pipe
           {
             print STDERR "DETAIL: /dev/stdout is not pipe or character device\n";
           }
-          my ($fh, $tmpfile) = File::Temp::tempfile();
+          my ($fh, $tmpfile) = File::Temp::tempfile(
+                                  '/tmp/bde-perl-stdout-buffer-XXXX',
+                                  UNLINK => 1
+                               );
           close($fh);
           my $result = $self->copy($tmpfile, @options);
           if ($result->{nerrors} > 0)
@@ -568,7 +574,10 @@ sub pipe
     my $log = $opts->{log_file};
     if ( ! $log ) {
       my $hlog;
-      ( $hlog, $log ) = File::Temp::tempfile();
+      ( $hlog, $log ) = File::Temp::tempfile(
+                            '/tmp/bde-perl-log-XXXX',
+                             UNLINK => 1
+                        );
       close($hlog);
     }
 
