@@ -1,6 +1,5 @@
-# 1.2.0dev (YYYY-MM-DD)
+# 1.2.0 (2019-09-09)
 ## Added
-## Fixed
 ## Enhanced
 - Temporary files are now prefixed and removed on exit (#50)
 
