@@ -25,7 +25,7 @@ my $requires = {
 
 my $version = '1.2.0';
 if ( `which git` && -d '.git' ) {
-  $version = `git describe`;
+  $version = `git describe --exclude '*/*'`;
   chop($version);
 }
 
