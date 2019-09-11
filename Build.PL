@@ -35,7 +35,7 @@ my $build =  inc::MyBuilder->new(
     dist_author        => 'LINZ',
     dist_abstract      => 'Perl package for managing LINZ BDE files and repositories',
     dist_version       => $version,
-    sign               => 1,
+    sign               => 0,
     requires           => $requires,
     create_makefile_pl => 'small',
 );
