@@ -38,6 +38,7 @@ my $build =  inc::MyBuilder->new(
     sign               => 1,
     requires           => $requires,
     create_makefile_pl => 'small',
+    sign               => 0
 );
 
 $build->create_build_script;
