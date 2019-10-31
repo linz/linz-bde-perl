@@ -1,0 +1,63 @@
+name: test
+
+on: [pull_request]
+
+jobs:
+
+  test:
+
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+            perl:
+              - "5.30"
+              - "5.28"
+              - "5.26"
+              - "5.24"
+              - "5.22"
+            os:
+              - ubuntu-18.04
+    env:
+      APT: "apt-get -o Dpkg::Progress=0 -o Dpkg::Use-Pty=0"
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: ${{ matrix.perl }}
+    - name: Install dependencies
+      run: |
+        # Install dependencies
+        sudo -E ${APT} -qq install --no-install-recommends \
+            cpanminus \
+            debhelper \
+            fakeroot \
+            libfile-which-perl
+        cpanm \
+            File::Which \
+            Module::Build \
+            Test::Cmd \
+            Test::Exception
+    - name: Build
+      run: |
+        perl --version
+        ./configure
+        make
+    - name: Test build
+      run: |
+        make test
+        sudo mv /dev/stdout /dev/stdout.bak
+        make test
+    - name: Test distribution
+      run: |
+        make dist
+        make distcheck
+        make disttest
+    - name: Test packaging
+      run: |
+        make deb
+        # Installing requires linz-bde-copy which is still
+        # unpackaged on packagecloud for bionic, see
+        # https://github.com/linz/linz-bde-copy/issues/44
+        #sudo dpkg -i ../liblinz-bde-perl*.deb
