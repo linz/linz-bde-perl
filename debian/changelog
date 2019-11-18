@@ -1,3 +1,9 @@
+liblinz-bde-perl (1.2.0-1linz~bionic1) bionic; urgency=medium
+
+  * Package rebuild for bionic
+
+ -- Ivan Mincik <imincik@linz.govt.nz>  Mon, 18 Nov 2019 15:20:07 +0100
+
 liblinz-bde-perl (1.2.0-1linz~trusty1) trusty; urgency=medium
 
   * New upstream version
