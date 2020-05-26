@@ -91,8 +91,8 @@ jobs:
         if test "${{ github.event_name }}" = 'push'; then
           if expr "${{ github.ref }}" : "refs/tags/" > /dev/null; then
             REPO=test
-          elif test "${{ github.ref }}" = 'refs/heads/packagecloud' -o
-               test "${{ github.ref }}" = 'refs/heads/master'
+          elif test "${{ github.ref }}" = 'refs/heads/packagecloud' \
+                 -o "${{ github.ref }}" = 'refs/heads/master'
           then
             REPO=dev
           fi
