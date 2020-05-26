@@ -41,7 +41,8 @@ jobs:
             cpanminus \
             debhelper \
             fakeroot \
-            libfile-which-perl
+            libfile-which-perl \
+            libtest-exception-perl
         cpanm \
             File::Which \
             Module::Build \
