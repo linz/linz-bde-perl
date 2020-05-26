@@ -68,3 +68,37 @@ jobs:
         # unpackaged on packagecloud for bionic, see
         # https://github.com/linz/linz-bde-copy/issues/44
         #sudo dpkg -i ../liblinz-bde-perl*.deb
+
+  package:
+    if: ${{ success() }}
+    name: Package for Debian
+    runs-on: ubuntu-18.04
+    strategy:
+        matrix:
+            distro: [ 'bionic' ]
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Determine packagecloud publication target
+      run: |
+        # TODO: it would be nice to turn this into a single-liner in
+        #       github-action syntax
+        echo "GitHub ref: ${{ github.ref }}"
+        echo "GitHub event_name: ${{ github.event_name }}"
+        REPO=
+        if test "${{ github.event_name }}" = 'push'; then
+          if expr "${{ github.ref }}" : "refs/tags/" > /dev/null; then
+            REPO=test
+          elif test "${{ github.ref }}" = 'refs/heads/packagecloud' -o
+               test "${{ github.ref }}" = 'refs/heads/master'
+          then
+            REPO=dev
+          fi
+        fi
+        echo "REPO: $REPO"
+        echo ::set-env name=REPO::"$REPO"
+
+    - uses: linz/linz-software-repository@master
+      with:
+        packagecloud_token: ${{ secrets.LINZCI_PACKAGECLOUD_TOKEN }}
+        publish_to_repository: ${{ env.REPO }}
