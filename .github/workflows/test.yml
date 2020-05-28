@@ -3,12 +3,14 @@ name: test
 on:
   push:
     branches:
-    - master
-    - packagecloud
-    - 'release-*'
+      - master
+      - packagecloud
+      - 'release-*'
+    tags:
+      - '*'
   pull_request:
     branches:
-    - '*'
+      - '*'
 
 jobs:
 
