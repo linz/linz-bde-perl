@@ -74,7 +74,7 @@ jobs:
         #sudo dpkg -i ../liblinz-bde-perl*.deb
 
   package:
-    if: ${{ success() }}
+    needs: test
     name: Package for Debian
     runs-on: ubuntu-18.04
     strategy:
