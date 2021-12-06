@@ -51,6 +51,30 @@ So then you can install it via:
     dpkg -i ../liblinz-bde-perl_*.deb
 
 
+## Simple install
+
+```shell
+perl Build.PL
+./Build install
+```
+
+## Advanced install options
+
+The build system is using perl Module::Build. A full list of the building
+options are available run:
+
+```shell
+./Build help
+```
+
+A more complex example involving specific install directories could something
+like:
+
+```shell
+perl Build.PL --prefix=/usr/local
+./Build install
+```
+
 ## Dependencies
 
 This package requires the [linz-bde-copy](https://github.com/linz/linz-bde-copy)
