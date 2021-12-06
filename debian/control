@@ -3,12 +3,13 @@ Section: perl
 Priority: optional
 Build-Depends: debhelper (>= 7)
 Build-Depends-Indep: perl (>= 5.8),
- libmodule-build-perl
+ libmodule-build-perl,
+ libtest-exception-perl
 Standards-Version: 3.9.5
 Maintainer: Jeremy Palmer (LINZ) <jpalmer@linz.govt.nz>
 Homepage: http://www.linz.govt.nz
-Vcs-Git: git://github.com/linz/linz_bde_perl.git
-Vcs-Browser: https://github.com/linz/linz_bde_perl
+Vcs-Git: git://github.com/linz/linz-bde-perl.git
+Vcs-Browser: https://github.com/linz/linz-bde-perl
 
 Package: liblinz-bde-perl
 Architecture: all

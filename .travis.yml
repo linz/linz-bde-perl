@@ -1,6 +1,8 @@
-dist: trusty
+dist: bionic
 language: perl
+
 perl:
+  - "5.26"
   - "5.24"
   - "5.22"
   - "5.20"
@@ -11,12 +13,17 @@ perl:
 
 before_install:
   # These are needed to test debian package build
-  - sudo apt-get install debhelper fakeroot
+  - sudo apt-get install debhelper fakeroot cpanminus
+  # Install packages needed for testing
+  - sudo cpanm Test::Cmd Test::Exception File::Which
 
 script:
-  - perl Makefile.PL
+  - ./configure
+  - make test
+  - sudo mv /dev/stdout /dev/stdout.bak
   - make test
   - make dist
   - make distcheck
+  - make disttest
   # Test debian package building
   - dpkg-buildpackage -b -us -uc

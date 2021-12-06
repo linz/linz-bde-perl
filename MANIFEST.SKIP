@@ -5,6 +5,7 @@
 \B\.svn\b
 \B\.git\b
 \B\.cvsignore$
+\B\.gitignore$
 \B\.travis.yml$
 
 # Avoid Makemaker generated and utility files.
@@ -20,7 +21,7 @@ MYMETA\..*
 \bBuild$
 \bBuild.bat$
 \b_build
-.*.tar.gz
+\bLINZ-Bde-v.*
 
 # Avoid Devel::Cover generated files
 \bcover_db
@@ -41,3 +42,5 @@ MYMETA\..*
 \B\._
 # Avoid archives of this distribution
 \bLINZ-Bde-[\d\.\_]+
+^MYMETA\.yml$
+^MYMETA\.json$

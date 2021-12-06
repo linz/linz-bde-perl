@@ -193,9 +193,18 @@ sub fields {
 
 sub archive_files {
   my($self,@files) = @_;
-  @files = @{$files[0]} if ref($files[0]);
-  @files = $self->fields if ! @files && ! $self->{archive_files};
-  $self->{archive_files} = \@files if @files;
+  if ( @files )
+  {
+    if ( ref($files[0]) )
+    {
+      @files = @{$files[0]};
+    }
+  }
+  else
+  {
+    @files = ();
+  }
+  $self->{archive_files} = \@files;
   my @sfiles = @{$self->{archive_files}};
   return wantarray ? @sfiles : \@sfiles;
   }
@@ -332,67 +341,10 @@ sub _bdecopy
     return $bdecopy;
 }
 
-sub copy
+sub resultFromLog
 {
-    my($self,$outputfile,@options) = @_;
+    my ($self,$log) = @_;
 
-    my $exe = _bdecopy();
-    my $opts = ref($options[0]) ? $options[0] : {@options};
-    my @copyopts;
-    my $cfgtmp;
-    my $cfg = $opts->{config};
-    if( $cfg =~ /\n/)
-    {
-        use File::Temp;
-        my $htmp;
-        ($htmp,$cfgtmp) = File::Temp::tempfile();
-        print $htmp $cfg;
-        CORE::close($htmp);
-        $cfg = $cfgtmp;
-    }
-    push(@copyopts,'-c',$cfg) if $cfg;
-
-    my @addfiles;
-    push(@addfiles,$opts->{addfile}) if $opts->{addfile};
-    push(@addfiles,@{$self->{archive_files}}) 
-        if $self->{archive_files} && $opts->{use_archive};
-    my $addfile = join('+',@addfiles);
-    push(@copyopts,'-p',$addfile) if $addfile;
-
-    push(@copyopts,'-a') if $opts->{append};
-    push(@copyopts,'-z') if $opts->{compress};
-
-    my $flds = join(':',split(' ',$self->{override_flds}));
-    push(@copyopts,'-f',$flds) if $flds;
-
-
-    $flds = $opts->{output_fields};
-    if( $flds )
-    {
-        if( ! ref($flds) )
-        {
-            my @f = $flds =~ /\w+/g;
-            $flds = \@f;
-        }
-        $self->output_fields($flds);
-    }
-
-    if( $self->{output_fields} )
-    {
-        $flds = join(':',@{$self->{output_fields}});
-        push(@copyopts,'-o',$flds) if $flds;
-    }
-
-    my $log = $opts->{log_file} || $outputfile.".log";
-
-    system(
-        $exe,
-        @copyopts,
-        $self->{path},
-        $outputfile,
-        $log
-    );
-    unlink($cfgtmp) if $cfgtmp;
     my $nrec=0;
     my $nerrors=0;
     my @warnings=();
@@ -461,8 +413,7 @@ sub copy
         }
         CORE::close($logf);
     }
-    unlink($log) if $opts->{log_file} || ! $opts->{keep_log};
-    my $success = $status eq 'success' && -r $outputfile;
+    my $success = $status eq 'success';
     my $result = 
     {
         success => $success,
@@ -477,6 +428,164 @@ sub copy
     return $result;
 }
 
+sub _copy_opts
+{
+    my($self,$opts) = @_;
+    my @copyopts;
+    my $cfgtmp;
+    my $cfg = $opts->{config};
+    if( $cfg =~ /\n/)
+    {
+        use File::Temp;
+        my $htmp;
+        ($htmp,$cfgtmp) = File::Temp::tempfile(
+                             '/tmp/bde-perl-copy-config-XXXX',
+                             UNLINK => 1
+                          );
+        print $htmp $cfg;
+        CORE::close($htmp);
+        $cfg = $cfgtmp;
+    }
+    push(@copyopts,'-c',$cfg) if $cfg;
+
+    my @addfiles;
+    push(@addfiles,$opts->{addfile}) if $opts->{addfile};
+    push(@addfiles,@{$self->{archive_files}}) 
+        if $self->{archive_files} && $opts->{use_archive};
+    my $addfile = join('+',@addfiles);
+    push(@copyopts,'-p',$addfile) if $addfile;
+
+    push(@copyopts,'-a') if $opts->{append};
+    push(@copyopts,'-z') if $opts->{compress};
+
+    my $flds = join(':',split(' ',$self->{override_flds}));
+    push(@copyopts,'-f',$flds) if $flds;
+
+    $flds = $opts->{output_fields};
+    if( $flds )
+    {
+        if( ! ref($flds) )
+        {
+            my @f = $flds =~ /\w+/g;
+            $flds = \@f;
+        }
+        $self->output_fields($flds);
+    }
+
+    if( $self->{output_fields} )
+    {
+        $flds = join(':',@{$self->{output_fields}});
+        push(@copyopts,'-o',$flds) if $flds;
+    }
+
+    return ($cfgtmp, @copyopts);
+}
+
+sub copy
+{
+    my($self,$outputfile,@options) = @_;
+    my $opts = ref($options[0]) ? $options[0] : {@options};
+
+    my $exe = _bdecopy();
+    my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
+
+    my $log = $opts->{log_file} || $outputfile.".log";
+
+    my @commandline = ($exe,
+        @copyopts,
+        $self->{path},
+        $outputfile,
+        $log);
+    my $ret = system(@commandline);
+    unlink($cfgtmp) if $cfgtmp;
+
+    my $result = $self->resultFromLog($log);
+    unlink($log) if $opts->{log_file} || ! $opts->{keep_log};
+
+    if ( $ret != 0 )
+    {
+      $result->{nerrors}++;
+      push( @{ $result->{errors} },
+        join(' ', @commandline) .
+        ' exited with ' . $ret);
+    }
+    return $result;
+}
+
+sub pipe
+{
+    my($self,@options) = @_;
+    my $opts = ref($options[0]) ? $options[0] : {@options};
+
+    my $exe = _bdecopy();
+    my $outputfile;
+
+    # bde_copy 1.3.0 introduced support for '-' string to signify
+    # using stdout for output, and it also introduced the `-V` switch
+    # to print version, so we check for -V support to tell if we're
+    # good to go.
+    my $ver = `$exe -V 2>&1`;
+    if ( $? eq 0 ) {
+      # Supports output to stdout
+      chop($ver); $ver =~ s/bde_copy //; $ver =~ s/ [0-9a-f]+$//;
+      $outputfile = '-';
+    }
+    else
+    {
+      $outputfile = '/dev/stdout';
+      # /dev/stdout needs to be writeable and a named pipe or character
+      # device for pipe to work w/out writing a temporary file
+      if ( not -w $outputfile or not ( -p $outputfile or -c $outputfile) )
+      {
+          print STDERR "WARNING: /dev/stdout is not usable so "
+                     . "Bde::pipe will use a temporary file\n";
+          if ( not -w $outputfile )
+          {
+            print STDERR "DETAIL: /dev/stdout is not writeable\n";
+          }
+          if ( not ( -p $outputfile or -c $outputfile ) )
+          {
+            print STDERR "DETAIL: /dev/stdout is not pipe or character device\n";
+          }
+          my ($fh, $tmpfile) = File::Temp::tempfile(
+                                  '/tmp/bde-perl-stdout-buffer-XXXX',
+                                  UNLINK => 1
+                               );
+          close($fh);
+          my $result = $self->copy($tmpfile, @options);
+          if ($result->{nerrors} > 0)
+          {
+              die (@{$result->{errors}});
+          }
+          foreach my $msg (@{$result->{warnings}})
+          {
+              print($msg);
+          }
+          open($fh, "<$tmpfile") || die ("Cannot open $tmpfile: $!");
+          unlink $tmpfile;
+          return $fh;
+      }
+      print STDERR "NOTICE: using /dev/stdout trick with bde_copy\n";
+    }
+
+
+    my ($cfgtmp, @copyopts) = $self->_copy_opts($opts);
+
+    my $log = $opts->{log_file};
+    if ( ! $log ) {
+      my $hlog;
+      ( $hlog, $log ) = File::Temp::tempfile(
+                            '/tmp/bde-perl-log-XXXX',
+                             UNLINK => 1
+                        );
+      close($hlog);
+    }
+
+    my $cmdline = $exe . ' ' . join(' ', @copyopts)
+       . ' ' . $self->{path} . ' ' . $outputfile . ' ' . $log;
+    open(my $fh, $cmdline . '|') || die "Cannot execute $cmdline: $!";
+    return $fh;
+}
 
 package LINZ::BdeDataset;
 
@@ -672,7 +781,7 @@ LINZ::Bde -- Reads and parses Landonline BDE files
   # LINZ::BdeFile functions
 
   LINZ::BdeFile::set_bde_path("c:/bde_data/level0/20100301230530");
-  LINZ::BdeFile::set_srid_lon_offset(4167,160.0);
+  LINZ::BdeFile::set_srid_longitude_offset(4167,160.0);
 
   $bdefile = LINZ::BdeFile->open("par1");
   $bdefile->copy( $outputfile );
@@ -762,7 +871,7 @@ The following class functions are provided:
 
 Sets a default directory in which to find BDE files. 
 
-=item LINZ::BdeFile::set_srid_lon_offset( srid, [lon_offset] )
+=item LINZ::BdeFile::set_srid_longitude_offset( srid, [lon_offset] )
 
 Sets the geometry SRID and the longitude offset applied to geometry fields.  These default to 4167 and 160.0.
 
@@ -871,6 +980,8 @@ An array reference for a list of warnings
 =item fields 
 
 An array reference for a list of output fields
+
+=back
 
 =back
 

@@ -1,0 +1,17 @@
+Build
+MANIFEST
+Makefile.PL
+MYMETA.json
+MYMETA.yml
+META.json
+META.yml
+Makefile
+_build/
+blib/
+*.tar.gz
+debian/debhelper-build-stamp
+debian/files
+debian/liblinz-bde-perl.debhelper.log
+debian/liblinz-bde-perl.substvars
+debian/liblinz-bde-perl/
+LINZ-Bde-v*
