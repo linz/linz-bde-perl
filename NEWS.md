@@ -1,3 +1,8 @@
+# 1.2.0 (2019-09-09)
+## Added
+## Enhanced
+- Temporary files are now prefixed and removed on exit (#50)
+
 # 1.1.1 (2019-08-08)
 ## Fixed
 - Perl 5.26 support ("Experimental push on scalar now forbidden" error)
