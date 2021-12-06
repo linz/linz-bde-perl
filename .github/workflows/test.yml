@@ -1,0 +1,108 @@
+name: test
+
+on:
+  push:
+    branches:
+      - master
+      - packagecloud
+      - 'release-*'
+    tags-ignore:
+      - 'debian/*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+
+  test:
+
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+            perl:
+              - "5.30"
+              - "5.28"
+              - "5.26"
+              - "5.24"
+              - "5.22"
+            os:
+              - ubuntu-18.04
+    env:
+      APT: "apt-get -o Dpkg::Progress=0 -o Dpkg::Use-Pty=0"
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup perl
+      uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: ${{ matrix.perl }}
+    - name: Install dependencies
+      run: |
+        # Install dependencies
+        sudo -E ${APT} -qq install --no-install-recommends \
+            cpanminus \
+            debhelper \
+            fakeroot \
+            libfile-which-perl \
+            libtest-exception-perl
+        cpanm \
+            File::Which \
+            Module::Build \
+            Test::Cmd \
+            Test::Exception
+    - name: Build
+      run: |
+        perl --version
+        ./configure
+        make
+    - name: Test build
+      run: |
+        make test
+        sudo mv /dev/stdout /dev/stdout.bak
+        make test
+    - name: Test distribution
+      run: |
+        make dist
+        make distcheck
+        make disttest
+    - name: Test packaging
+      run: |
+        make deb
+        # Installing requires linz-bde-copy which is still
+        # unpackaged on packagecloud for bionic, see
+        # https://github.com/linz/linz-bde-copy/issues/44
+        #sudo dpkg -i ../liblinz-bde-perl*.deb
+
+  package:
+    needs: test
+    name: Package for Debian
+    runs-on: ubuntu-18.04
+    strategy:
+        matrix:
+            distro: [ 'bionic' ]
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Determine packagecloud publication target
+      run: |
+        # TODO: it would be nice to turn this into a single-liner in
+        #       github-action syntax
+        echo "GitHub ref: ${{ github.ref }}"
+        echo "GitHub event_name: ${{ github.event_name }}"
+        PACKAGECLOUD_REPOSITORY=
+        if test "${{ github.event_name }}" = 'push'; then
+          if expr "${{ github.ref }}" : "refs/tags/" > /dev/null; then
+            PACKAGECLOUD_REPOSITORY=test
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          elif test "${{ github.ref }}" = 'refs/heads/packagecloud' \
+                 -o "${{ github.ref }}" = 'refs/heads/master'
+          then
+            PACKAGECLOUD_REPOSITORY=dev
+          fi
+        fi
+        echo "PACKAGECLOUD_REPOSITORY=$PACKAGECLOUD_REPOSITORY" | tee -a $GITHUB_ENV
+
+    - uses: linz/linz-software-repository@v4
+      with:
+        packagecloud_token: ${{ secrets.LINZCI_PACKAGECLOUD_TOKEN }}
+        packagecloud_repository: ${{ env.PACKAGECLOUD_REPOSITORY }}
