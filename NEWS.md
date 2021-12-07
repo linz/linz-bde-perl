@@ -1,3 +1,10 @@
+# 1.3.0 (2021-12-07)
+## Added
+- Github test action and badge (#57)
+- Add package building and publishing steps (#60)
+## Enhanced
+- Forward port package build improvements (#56)
+
 # 1.2.0 (2019-09-09)
 ## Added
 ## Enhanced
