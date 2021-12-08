@@ -1,4 +1,4 @@
-# 1.3.0 (2021-12-07)
+# 1.3.1 (2021-12-07)
 ## Added
 - Github test action and badge (#57)
 - Add package building and publishing steps (#60)
