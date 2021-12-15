@@ -1,1 +1,4 @@
 version = 1
+
+[merge.message]
+title = "pull_request_title"
