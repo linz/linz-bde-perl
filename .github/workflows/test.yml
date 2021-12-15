@@ -32,7 +32,7 @@ jobs:
     env:
       APT: "apt-get -o Dpkg::Progress=0 -o Dpkg::Use-Pty=0"
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2.4.0
     - name: Setup perl
       uses: shogo82148/actions-setup-perl@v1
       with:
@@ -82,7 +82,9 @@ jobs:
         matrix:
             distro: [ 'bionic' ]
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2.4.0
+      with:
+        fetch-depth: 0  # Enable the changelog generator to check out previous branch
 
     - name: Determine packagecloud publication target
       run: |
