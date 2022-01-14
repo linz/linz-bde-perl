@@ -19,6 +19,7 @@ jobs:
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+        fail-fast: false
         matrix:
             perl:
               - "5.34"
@@ -79,6 +80,7 @@ jobs:
     name: Package for Debian
     runs-on: ubuntu-18.04
     strategy:
+        fail-fast: false
         matrix:
             distro: [ 'bionic' ]
     steps:
