@@ -5,7 +5,7 @@ shopt -s failglob inherit_errexit
 
 PERL=perl
 
-cd `dirname $0`
+cd "$(dirname "$0")"
 
 ${PERL} Build.PL
 ./Build manifest
