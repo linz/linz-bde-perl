@@ -3,14 +3,12 @@
 set -o errexit -o noclobber -o nounset -o pipefail
 shopt -s failglob inherit_errexit
 
-PERL=perl
-
 cd "$(dirname "$0")"
 
-${PERL} Build.PL
+perl Build.PL
 ./Build manifest
 ./Build distmeta
-${PERL} Makefile.PL
+perl Makefile.PL
 
 # Append custom rules
 cat <<EOF >> Makefile
