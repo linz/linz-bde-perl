@@ -13,7 +13,7 @@ before_install:
   - sudo cpanm Test::Cmd Test::Exception File::Which
 
 script:
-  - ./configure
+  - ./configure.bash
   - make test
   - sudo mv /dev/stdout /dev/stdout.bak
   - make test

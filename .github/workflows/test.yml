@@ -72,7 +72,7 @@ jobs:
       - name: Build
         run: |
           perl --version
-          ./configure
+          ./configure.bash
           make
 
       - name: Test build
