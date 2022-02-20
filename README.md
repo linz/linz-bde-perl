@@ -74,6 +74,12 @@ perl Build.PL --prefix=/usr/local
 This package requires the [linz-bde-copy](https://github.com/linz/linz-bde-copy) programme to be
 installed.
 
+## Linting
+
+Prerequisites: [Nix](https://nixos.org/download.html)
+
+Run `nix-shell --pure --run 'pre-commit run --all-files'`.
+
 ## License
 
 This program is released under the terms of the new BSD license. See the LICENSE file for more
