@@ -44,8 +44,7 @@ jobs:
           - ubuntu-18.04
           - ubuntu-20.04
           - ubuntu-latest
-    env:
-      APT: 'apt-get -o Dpkg::Progress=0 -o Dpkg::Use-Pty=0'
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v2.4.0
@@ -55,38 +54,40 @@ jobs:
         with:
           perl-version: ${{ matrix.perl }}
 
-      - name: Install dependencies
+      - name: Install debian dependencies
         run: |
-          # Install dependencies
-          sudo -E ${APT} -qq install --no-install-recommends \
+          sudo -E apt-get --assume-yes -qq install --no-install-recommends \
               cpanminus \
               debhelper \
               fakeroot \
               libfile-which-perl \
               libtest-exception-perl
+
+      - name: Install CPAN dependencies
+        run: |
           cpanm \
               File::Which \
               Module::Build \
               Test::Cmd \
               Test::Exception
 
+      - name: Build perl
+        run: ./configure.bash
+
       - name: Build
-        run: |
-          perl --version
-          ./configure.bash
-          make
+        run: make
 
       - name: Test build
-        run: |
-          make test
-          sudo mv /dev/stdout /dev/stdout.bak
-          make test
+        run: make test
 
-      - name: Test distribution
-        run: |
-          make dist
-          make distcheck
-          make disttest
+      - name: Buld distribution
+        run: make dist
+
+      - name: Run distribution checks
+        run: make distcheck
+
+      - name: Run distribution test
+        run: make disttest
 
       - name: Test packaging
         run: |
