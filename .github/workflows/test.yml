@@ -63,7 +63,7 @@ jobs:
               libfile-which-perl \
               libtest-exception-perl
 
-      - name: Install CPAN dependencies
+      - name: Install Perl dependencies
         run: |
           cpanm \
               File::Which \
@@ -80,7 +80,7 @@ jobs:
       - name: Test build
         run: make test
 
-      - name: Buld distribution
+      - name: Build distribution
         run: make dist
 
       - name: Run distribution checks
@@ -146,7 +146,7 @@ jobs:
               libtest-exception-perl \
               linz-bde-copy
 
-      - name: Install CPAN dependencies
+      - name: Install Perl dependencies
         run: |
           cpanm \
               File::Which \
@@ -163,7 +163,7 @@ jobs:
       - name: Test build
         run: make test
 
-      - name: Buld distribution
+      - name: Build distribution
         run: make dist
 
       - name: Run distribution checks
