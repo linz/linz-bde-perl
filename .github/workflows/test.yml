@@ -119,6 +119,23 @@ jobs:
         with:
           perl-version: ${{ matrix.perl }}
 
+      - name: Get release codename
+        id: distro
+        run: echo "::set-output name=codename::$(lsb_release --codename --short)"
+
+      - name: Enable fetching packages from packagecloud test repository
+        run: |
+          curl -Ls https://packagecloud.io/linz/test/gpgkey | sudo apt-key add -
+          echo "deb https://packagecloud.io/linz/test/ubuntu/ ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-test.list
+
+      - name: Enable fetching packages from packagecloud prod repository
+        run: |
+          curl -Ls https://packagecloud.io/linz/prod/gpgkey | sudo apt-key add -
+          echo "deb https://packagecloud.io/linz/prod/ubuntu/ ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-prod.list
+
+      - name: Update package database
+        run: sudo apt-get update
+
       - name: Install debian dependencies
         run: |
           sudo -E apt-get --assume-yes -qq install --no-install-recommends \
@@ -126,7 +143,8 @@ jobs:
               debhelper \
               fakeroot \
               libfile-which-perl \
-              libtest-exception-perl
+              libtest-exception-perl \
+              linz-bde-copy
 
       - name: Install CPAN dependencies
         run: |
