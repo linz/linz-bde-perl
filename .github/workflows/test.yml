@@ -29,7 +29,7 @@ jobs:
       - name: Run pre-commit hooks
         run: nix-shell --pure --run 'pre-commit run --all-files'
 
-  test-source:
+  test:
     name: Test source Perl ${{ matrix.perl }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -44,69 +44,6 @@ jobs:
           - ubuntu-18.04
           - ubuntu-20.04
           - ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v2.4.0
-
-      - name: Setup perl
-        uses: shogo82148/actions-setup-perl@v1
-        with:
-          perl-version: ${{ matrix.perl }}
-
-      - name: Install debian dependencies
-        run: |
-          sudo -E apt-get --assume-yes -qq install --no-install-recommends \
-              cpanminus \
-              debhelper \
-              fakeroot \
-              libfile-which-perl \
-              libtest-exception-perl
-
-      - name: Install Perl dependencies
-        run: |
-          cpanm \
-              File::Which \
-              Module::Build \
-              Test::Cmd \
-              Test::Exception
-
-      - name: Build perl
-        run: ./configure.bash
-
-      - name: Build
-        run: make
-
-      - name: Test build
-        run: make test
-
-      - name: Build distribution
-        run: make dist
-
-      - name: Run distribution checks
-        run: make distcheck
-
-      - name: Run distribution test
-        run: make disttest
-
-  test-package:
-    name: Test packaging Perl ${{ matrix.perl }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        perl:
-          - '5.34'
-          - '5.32'
-          - '5.30'
-          - '5.28'
-        include:
-          - os: ubuntu-18.04
-            release: bionic
-          - os: ubuntu-20.04
-            release: focal
-          - os: ubuntu-latest
-            release: focal
 
     steps:
       - name: Check out repository
@@ -126,14 +63,14 @@ jobs:
       - name: Enable fetching packages from packagecloud test repository
         run: |
           curl -Ls https://packagecloud.io/linz/test/gpgkey | sudo apt-key add -
-          echo "deb https://packagecloud.io/linz/test/ubuntu/ ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-test.list
+          echo "deb https://packagecloud.io/linz/test/ubuntu ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-test.list
 
       - name: Enable fetching packages from packagecloud prod repository
         run: |
           curl -Ls https://packagecloud.io/linz/prod/gpgkey | sudo apt-key add -
-          echo "deb https://packagecloud.io/linz/prod/ubuntu/ ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-prod.list
+          echo "deb https://packagecloud.io/linz/prod/ubuntu ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-prod.list
 
-      - name: Update package database
+      - name: Update package database with PostgreSQL repo
         run: sudo apt-get update
 
       - name: Install debian dependencies
@@ -183,8 +120,7 @@ jobs:
   package:
     needs:
       - lint
-      - test-package
-      - test-source
+      - test
     name: Package for Debian
     runs-on: ubuntu-20.04
     strategy:
