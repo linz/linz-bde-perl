@@ -40,8 +40,8 @@ jobs:
           - '5.32'
           - '5.30'
           - '5.28'
-        os: [ubuntu-18.04]
-        release: [bionic]
+        os: [ubuntu-18.04, ubuntu-20.04, ubuntu-latest]
+        release: [bionic, focal]
 
     steps:
       - name: Check out repository
