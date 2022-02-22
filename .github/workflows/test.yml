@@ -30,7 +30,7 @@ jobs:
         run: nix-shell --pure --run 'pre-commit run --all-files'
 
   test:
-    name: Test source Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    name: Test Perl ${{ matrix.perl }} on ${{ matrix.os }} packaged for ${{ matrix.release }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -40,10 +40,8 @@ jobs:
           - '5.32'
           - '5.30'
           - '5.28'
-        os:
-          - ubuntu-18.04
-          - ubuntu-20.04
-          - ubuntu-latest
+        os: [ubuntu-18.04]
+        release: [bionic]
 
     steps:
       - name: Check out repository
