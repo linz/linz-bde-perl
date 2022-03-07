@@ -1,3 +1,13 @@
+# 1.4.0 (2022-03-07)
+
+## Added
+
+- Support for Ubuntu 20.04/LTS
+
+## Enhanced
+
+- Quality improvements
+
 # 1.3.1 (2021-12-07)
 
 ## Added
