@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: Install Nix
         uses: cachix/install-nix-action@v16
@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -107,7 +107,7 @@ jobs:
         run: make disttest
 
       - name: Build packages for all supported versions
-        uses: linz/linz-software-repository@v8
+        uses: linz/linz-software-repository@v9
         with:
           release: ${{ steps.distro.outputs.codename }}
 
@@ -124,9 +124,10 @@ jobs:
       fail-fast: false
       matrix:
         distro: [bionic, focal]
+      max-parallel: 1
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Enable the changelog generator to check out previous branch
 
@@ -150,7 +151,7 @@ jobs:
           echo "PACKAGECLOUD_REPOSITORY=$PACKAGECLOUD_REPOSITORY" | tee -a $GITHUB_ENV
 
       - name: Build and upload to Packagecloud
-        uses: linz/linz-software-repository@v8
+        uses: linz/linz-software-repository@v9
         with:
           release: ${{ matrix.distro }}
           packagecloud_token: ${{ secrets.LINZCI_PACKAGECLOUD_TOKEN }}
