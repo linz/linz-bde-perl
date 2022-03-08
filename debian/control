@@ -1,8 +1,8 @@
 Source: liblinz-bde-perl
 Section: perl
 Priority: optional
-Build-Depends: debhelper (>= 7)
-Build-Depends-Indep: perl (>= 5.8),
+Build-Depends: debhelper
+Build-Depends-Indep: perl,
  libmodule-build-perl,
  libtest-exception-perl
 Standards-Version: 3.9.5
@@ -13,9 +13,10 @@ Vcs-Browser: https://github.com/linz/linz-bde-perl
 
 Package: liblinz-bde-perl
 Architecture: all
-Depends: ${misc:Depends}, ${perl:Depends},
+Depends: ${misc:Depends},
+ ${perl:Depends},
  libfile-which-perl,
- linz-bde-copy (>= 1.1)
+ linz-bde-copy
 Recommends:
 Description: The Bde module is used to read bulk-data extract files generated
  by Landonline. These are pipe delimited files of data.  The data in each file
