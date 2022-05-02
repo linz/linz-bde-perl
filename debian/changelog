@@ -1,3 +1,9 @@
+liblinz-bde-perl (1.4.1-linz~bionic) bionic; urgency=medium
+
+  * New version
+
+ -- GitHub <noreply@github.com>  Mon, 02 May 2022 00:21:01 +0000
+
 liblinz-bde-perl (1.4.0-linz~focal) focal; urgency=medium
 
   * New version
