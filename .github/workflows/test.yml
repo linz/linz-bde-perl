@@ -107,7 +107,7 @@ jobs:
         run: make disttest
 
       - name: Build packages for all supported versions
-        uses: linz/linz-software-repository@v12
+        uses: linz/linz-software-repository@v13
         with:
           release: ${{ steps.distro.outputs.codename }}
 
@@ -151,7 +151,7 @@ jobs:
           echo "PACKAGECLOUD_REPOSITORY=$PACKAGECLOUD_REPOSITORY" | tee -a $GITHUB_ENV
 
       - name: Build and upload to Packagecloud
-        uses: linz/linz-software-repository@v12
+        uses: linz/linz-software-repository@v13
         with:
           release: ${{ matrix.distro }}
           packagecloud_token: ${{ secrets.LINZCI_PACKAGECLOUD_TOKEN }}
