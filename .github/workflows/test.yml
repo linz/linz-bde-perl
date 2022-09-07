@@ -4,13 +4,8 @@ on:
   push:
     branches:
       - master
-      - packagecloud
-      - 'release-*'
-    tags-ignore:
-      - 'debian/*'
   pull_request:
-    branches:
-      - '*'
+    types: [opened, reopened, synchronize]
   schedule:
     - cron: '0 12 * * 0'
 
