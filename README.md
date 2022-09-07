@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/linz/linz-bde-perl.svg?branch=master)](https://travis-ci.org/linz/linz-bde-perl)
 [![Actions Status](https://github.com/linz/linz-bde-perl/workflows/test/badge.svg?branch=master)](https://github.com/linz/linz-bde-perl/actions)
 
 # BDE Perl Package
