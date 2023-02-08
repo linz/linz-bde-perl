@@ -1,3 +1,10 @@
+# X.Y.Z (YYYY-MM-DD)
+
+## Removed
+
+- Drop Ubuntu 18.04 support after
+  [GitHub dropped their runner support](https://github.com/actions/runner-images/issues/6002).
+
 # 1.4.1 (2022-05-02)
 
 ## Fixed
