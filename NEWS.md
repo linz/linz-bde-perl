@@ -1,4 +1,8 @@
-# X.Y.Z (YYYY-MM-DD)
+# 1.5.0 (2023-02-09)
+
+## Added
+
+- Support for Ubuntu 22.04
 
 ## Removed
 
