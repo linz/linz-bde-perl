@@ -38,8 +38,9 @@ jobs:
           - '5.32'
           - '5.30'
           - '5.28'
-        os: [ubuntu-20.04]
-
+        os:
+          - ubuntu-20.04
+          - ubuntu-22.04
     steps:
       - name: Check out repository
         uses: actions/checkout@v3.3.0
@@ -116,12 +117,16 @@ jobs:
     needs:
       - lint
       - test
-    name: Package for Debian
-    runs-on: ubuntu-20.04
+    name: Package for ${{ matrix.distro }} on ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
-        distro: [focal]
+        include:
+          - distro: focal
+            runner: ubuntu-20.04
+          - distro: jammy
+            runner: ubuntu-22.04
       max-parallel: 1
     steps:
       - name: Check out repository
