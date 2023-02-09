@@ -1,3 +1,9 @@
+liblinz-bde-perl (1.5.0-linz~jammy) jammy; urgency=medium
+
+  * New version
+
+ -- GitHub <noreply@github.com>  Thu, 09 Feb 2023 03:11:29 +0000
+
 liblinz-bde-perl (1.4.1-linz~bionic) bionic; urgency=medium
 
   * New version
