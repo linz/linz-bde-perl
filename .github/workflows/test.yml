@@ -50,18 +50,17 @@ jobs:
           perl-version: ${{ matrix.perl }}
 
       - name: Get release codename
-        id: distro
-        run: echo "::set-output name=codename::$(lsb_release --codename --short)"
+        run: echo "codename=$(lsb_release --codename --short)" >> "$GITHUB_ENV"
 
       - name: Enable fetching packages from packagecloud test repository
         run: |
           curl -Ls https://packagecloud.io/linz/test/gpgkey | sudo apt-key add -
-          echo "deb https://packagecloud.io/linz/test/ubuntu ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-test.list
+          echo "deb https://packagecloud.io/linz/test/ubuntu ${{ env.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-test.list
 
       - name: Enable fetching packages from packagecloud prod repository
         run: |
           curl -Ls https://packagecloud.io/linz/prod/gpgkey | sudo apt-key add -
-          echo "deb https://packagecloud.io/linz/prod/ubuntu ${{ steps.distro.outputs.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-prod.list
+          echo "deb https://packagecloud.io/linz/prod/ubuntu ${{ env.codename }} main" | sudo tee /etc/apt/sources.list.d/linz-prod.list
 
       - name: Update package database with PostgreSQL repo
         run: sudo apt-get update
@@ -105,7 +104,7 @@ jobs:
       - name: Build packages for all supported versions
         uses: linz/linz-software-repository@v15
         with:
-          release: ${{ steps.distro.outputs.codename }}
+          release: ${{ env.codename }}
 
       - name: Install package
         run: sudo dpkg --install build-area/liblinz-bde-perl*.deb
