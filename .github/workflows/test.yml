@@ -45,7 +45,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup perl
-        uses: shogo82148/actions-setup-perl@v1.23.1
+        uses: shogo82148/actions-setup-perl@v1.24.1
         with:
           perl-version: ${{ matrix.perl }}
 
